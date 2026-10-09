@@ -1,29 +1,58 @@
 name: Gerar APK Android do GugaGames
 
 on:
-  workflow_dispatch:
   push:
-    branches: [main, master]
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   apk:
     name: Compilar aplicativo Android
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+
+    env:
+      PYTHONFORANDROID_PREREQUISITES_INSTALL_INTERACTIVE: "0"
+
     steps:
       - name: Baixar codigo do repositorio
         uses: actions/checkout@v4
-      - name: Compilar com Buildozer
-        id: buildozer
-        uses: ArtemSBulgakov/buildozer-action@v1
+
+      - name: Configurar Java 17 sem PPA externo
+        uses: actions/setup-java@v4
         with:
-          workdir: .
-          command: buildozer android debug
-          buildozer_version: stable
+          distribution: temurin
+          java-version: '17'
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Instalar dependencias oficiais do Buildozer
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            git zip unzip autoconf automake libtool libltdl-dev \
+            pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev \
+            libtinfo6 cmake libffi-dev libssl-dev autopoint gettext
+          python -m pip install --upgrade pip setuptools wheel
+          python -m pip install buildozer cython==0.29.34
+          java -version
+          python --version
+          buildozer --version
+
+      - name: Compilar APK Android
+        run: buildozer -v android debug
+
       - name: Disponibilizar APK para download
+        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: GugaGames-APK-Android
-          path: ${{ steps.buildozer.outputs.filename }}
+          path: bin/*.apk
           if-no-files-found: error
+          retention-days: 30
