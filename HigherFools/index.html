@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="theme-color" content="#132637">
+  <title>Higher Fools — protótipo de física</title>
+  <style>
+    *{box-sizing:border-box}html,body{padding:0;margin:0;width:100%;height:100%;overflow:hidden;background:#7ab6e8;font-family:system-ui,-apple-system,'Trebuchet MS',sans-serif;user-select:none;-webkit-user-select:none}button,input{font:inherit}button{cursor:pointer}#game{position:absolute;inset:0;display:block;width:100%;height:100%;touch-action:none}#hud{position:absolute;top:env(safe-area-inset-top,0px);left:0;right:0;pointer-events:none;color:#fff;z-index:3;padding:16px 13px 0;display:none}.topbar{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.logo{font-size:20px;letter-spacing:-1px;font-weight:1000;font-style:italic;-webkit-text-stroke:.5px #231919;color:#ffe052;text-shadow:2px 3px 0 #272431}.stats{display:flex;gap:7px;margin-top:6px}.pill{border:2px solid #2e3339;background:#263743d9;padding:6px 9px;border-radius:11px;box-shadow:0 3px 0 #101923a3;font-size:11px;font-weight:850;white-space:nowrap}.pill strong{font-size:15px;color:#ffe052;margin-left:4px}.toolbar{display:flex;gap:7px;pointer-events:auto}.round{width:43px;height:43px;border:2px solid #202b31;border-radius:12px;background:#fce6ab;color:#25313b;box-shadow:0 4px 0 #172630;font-size:20px;font-weight:900}.round:active{transform:translateY(3px);box-shadow:0 1px 0 #172630}#hint{position:absolute;bottom:calc(env(safe-area-inset-bottom,0px) + 20px);left:50%;transform:translateX(-50%);width:min(91%,410px);pointer-events:none;text-align:center;z-index:2;color:#fff;background:#182c39b9;border:1px solid #ffffff70;padding:10px;border-radius:14px;font-size:13px;line-height:1.4;font-weight:800;display:none;text-shadow:1px 1px 1px #333}#overlay{position:absolute;inset:0;z-index:5;display:flex;align-items:center;justify-content:center;padding:22px 16px calc(env(safe-area-inset-bottom,0px) + 18px);background:linear-gradient(180deg,#122b4296,#122536b5);overflow:auto}.paper{width:min(100%,420px);padding:24px 20px;border:4px solid #25333f;border-radius:25px;background:linear-gradient(145deg,#fff2c9,#f2dba5);color:#25313a;box-shadow:0 11px 0 #182634,0 19px 35px #07152285;position:relative;text-align:center}.eyebrow{font-size:11px;letter-spacing:2px;font-weight:1000;color:#96552d;text-transform:uppercase}.title{font-weight:1000;line-height:.85;letter-spacing:-3px;font-size:clamp(46px,13vw,72px);color:#f6be34;-webkit-text-stroke:3px #1b3039;paint-order:stroke fill;text-shadow:4px 6px 0 #bb6540;transform:rotate(-2deg);margin:12px 0 20px}.sub{font-size:13px;font-weight:800;margin:0 0 17px}.heroes{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:16px}.hero{border:2px solid #534d44;border-radius:10px;background:#e8cba1;position:relative;padding:8px 2px 5px;min-width:0;font-size:11px;font-weight:1000;overflow:hidden}.hero.active{background:#ffe39a;border-color:#cb613b;box-shadow:0 3px 0 #b34d2e}.hero.locked{opacity:.67}.head{margin:0 auto 6px;width:37px;height:39px;border:3px solid #3a3530;display:flex;align-items:center;justify-content:center;font-size:23px;border-radius:8px;background:#bb8954;transform:rotate(-6deg);box-shadow:0 5px 0 #ad5334}.hero:nth-child(2) .head{background:#9fb2bd;border-radius:15px}.hero:nth-child(3) .head{background:#8aa96b}.hero:nth-child(4) .head{background:#dcb2b9;transform:rotate(8deg)}.hero small{display:block;font-size:9px;margin-top:3px}.btn{border:3px solid #27333a;background:#ffb62b;border-radius:13px;box-shadow:0 5px 0 #ad6435;color:#27313b;font-weight:1000;font-size:20px;width:100%;padding:11px 14px}.btn:active{transform:translateY(3px);box-shadow:0 2px 0 #ad6435}.muted{color:#635f52;font-size:11px;margin:13px 0 0;line-height:1.5}.setting{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid #ac9a73;font-size:13px;font-weight:800;gap:12px}.setting input{width:130px;accent-color:#ba603b}.setting button{border:2px solid #27333a;border-radius:9px;background:#fff7df;padding:5px 14px}.menuonly{display:none}#toast{position:absolute;top:22%;left:50%;transform:translateX(-50%) rotate(-3deg);background:#ffe67a;color:#26333d;padding:9px 15px;border:3px solid #29343d;border-radius:12px;font-size:18px;font-weight:1000;pointer-events:none;opacity:0;transition:opacity .2s;z-index:4;white-space:nowrap;box-shadow:0 5px 0 #c65c3d}.footer{font-size:9px;opacity:.7;text-align:center;margin-top:12px;font-weight:800}@media(max-height:670px){.paper{padding:15px 14px}.title{font-size:42px;margin:8px 0 12px}.heroes{margin-bottom:9px}.sub{margin-bottom:11px}.head{height:29px;width:30px;font-size:18px}}
+  </style>
+</head>
+<body>
+<canvas id="game" aria-label="Jogo Higher Fools"></canvas>
+<div id="hud"><div class="topbar"><div><div class="logo">HIGHER FOOLS 👑</div><div class="stats"><div class="pill">ALTURA <strong id="height">0,0 m</strong></div><div class="pill">RECORDE <strong id="best">0,0 m</strong></div></div></div><div class="toolbar"><button class="round" id="reset" aria-label="Recomeçar" title="Recomeçar">↺</button><button class="round" id="pause" aria-label="Pausar" title="Pausar">Ⅱ</button></div></div></div>
+<div id="hint">☝️ Arraste ao redor do BRIX para girar o martelo e empurrar a sucata. Cair faz parte!</div>
+<div id="toast"></div>
+<div id="overlay"><div class="paper"><div class="eyebrow" id="eyebrow">Protótipo jogável • versão interna 0.1</div><div class="title">HIGHER<br>FOOLS</div><p class="sub" id="subtitle">Suba o mais alto... se conseguir!</p><div id="heroChooser" class="heroes"><div class="hero active"><div class="head">😬</div>BRIX<small>Martelo</small></div><div class="hero locked"><div class="head">🤪</div>NIX<small>Em breve</small></div><div class="hero locked"><div class="head">😵</div>GROK<small>Em breve</small></div><div class="hero locked"><div class="head">🥴</div>SORA<small>Em breve</small></div></div><div id="settings" class="menuonly"><div class="setting"><span>Sensibilidade do martelo</span><input id="sensitivity" type="range" min="50" max="160" value="100" aria-label="Sensibilidade"></div><div class="setting"><span>Sons engraçados</span><button id="mute">Ativado</button></div><div class="setting"><span>Mostrar dicas</span><button id="tips">Ativado</button></div></div><button class="btn" id="play">▶ COMEÇAR A SUBIR</button><p class="muted" id="instructions">Toque e arraste para apontar o martelo. Apoie-o em objetos para impulsionar o Brix. Sem teletransporte e sem checkpoints.</p><div class="footer">ARTE E FÍSICA DE PROTÓTIPO • NÃO É PUBLICAÇÃO OFICIAL</div></div></div>
+<script>
+'use strict';
+(()=>{
+const canvas=document.getElementById('game');const ctx=canvas.getContext('2d',{alpha:false});
+const $=id=>document.getElementById(id);const TAU=Math.PI*2;
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),lerp=(a,b,t)=>a+(b-a)*t;const rad=d=>d*Math.PI/180;
+const safeRead=(k,f)=>{try{return localStorage.getItem(k)??f}catch{return f}};
+const safeWrite=(k,v)=>{try{localStorage.setItem(k,v)}catch{}};
+let W=420,H=800,DPR=1,scale=0.75,vw=560,vh=1000,camX=0,camY=400,phase='menu',last=0,accumulator=0,total=0;
+let best=Number(safeRead('higherfools-best','0'))||0,showHints=safeRead('higherfools-tips','1')==='1',muted=safeRead('higherfools-muted','0')==='1',sens=Number(safeRead('higherfools-sens','100'))||100;
+const physics={gravity:830,friction:0.998,elasticity:.05};const p={x:91,y:1068,vx:0,vy:0,r:22,angle:Math.PI/3,target:-Math.PI/4,length:99,angular:0,contact:false,stuck:false,eyes:0};
+let pointer=null,wasAbove=0,tipContact=0,toasterTimeout=0,win=false;
+const solids=[
+ [0,1100,560,230,'floor'],[0,-590,20,1730,'wall'],[540,-590,20,1730,'wall'],
+ [170,1013,134,27,'wood'],[356,935,160,25,'metal'],[302,851,139,23,'wood'],
+ [116,766,135,25,'fridge'],[18,671,140,26,'metal'],[188,590,133,25,'wood'],
+ [354,508,143,23,'barrel'],[327,425,103,24,'wood'],[133,345,139,24,'metal'],
+ [275,250,131,24,'fridge'],[411,174,119,24,'wood'],[282,79,133,25,'metal'],
+ [119,-28,136,27,'wood'],[31,-133,130,26,'fridge'],[207,-217,131,26,'metal'],
+ [364,-308,135,27,'wood'],[245,-413,174,30,'finish']
+].map(([x,y,w,h,type])=>({x,y,w,h,type}));
+let decorations=[];
+for(let i=0;i<38;i++){const yy=1065-i*47;decorations.push({x:(i*137+53)%480,y:yy,kind:i%6,size:15+(i*19)%20})}
+function resize(){DPR=Math.min(devicePixelRatio||1,2);W=window.innerWidth;H=window.innerHeight;canvas.width=Math.floor(W*DPR);canvas.height=Math.floor(H*DPR);scale=clamp(W/560,.55,1.6);vw=W/scale;vh=H/scale;ctx.setTransform(DPR,0,0,DPR,0,0);camX=(560-vw)/2;}
+window.addEventListener('resize',resize);resize();
+function reset(){p.x=91;p.y=1068;p.vx=0;p.vy=0;p.angle=rad(35);p.target=rad(-40);p.length=99;p.targetLength=99;p.angular=0;p.contact=false;win=false;wasAbove=0;tipContact=0;camY=p.y-vh*.61;showToast('Mais uma tentativa!');}
+function showToast(s){$('toast').textContent=s;$('toast').style.opacity=1;toasterTimeout=2.2}
+function start(){if(phase==='menu'||phase==='finished')reset();phase='playing';$('overlay').style.display='none';$('hud').style.display='block';$('hint').style.display=showHints?'block':'none';$('best').textContent=best.toFixed(1).replace('.',',')+' m';}
+function pause(){if(phase!=='playing')return;phase='paused';$('overlay').style.display='flex';$('eyebrow').textContent='Pausa técnica para recuperar a dignidade';$('subtitle').textContent='Pelo menos você ainda não caiu.';$('heroChooser').style.display='none';$('settings').style.display='block';$('play').textContent='▶ CONTINUAR';$('instructions').textContent='Arraste em torno do personagem para girar o martelo. O martelo precisa tocar nas plataformas para impulsionar o corpo.';}
+function menu(){phase='menu';$('overlay').style.display='flex';$('eyebrow').textContent='Protótipo jogável • versão interna 0.1';$('subtitle').textContent='Suba o mais alto... se conseguir!';$('heroChooser').style.display='grid';$('settings').style.display='none';$('play').textContent='▶ COMEÇAR A SUBIR';}
+$('play').onclick=start;$('pause').onclick=pause;$('reset').onclick=()=>{reset();if(phase!=='playing')start()};$('sensitivity').value=sens;$('sensitivity').oninput=e=>{sens=Number(e.target.value);safeWrite('higherfools-sens',String(sens))};
+function updateToggles(){$('mute').textContent=muted?'Desativado':'Ativado';$('tips').textContent=showHints?'Ativado':'Desativado';$('hint').style.display=showHints&&phase==='playing'?'block':'none'}
+$('mute').onclick=()=>{muted=!muted;safeWrite('higherfools-muted',muted?'1':'0');updateToggles()};$('tips').onclick=()=>{showHints=!showHints;safeWrite('higherfools-tips',showHints?'1':'0');updateToggles()};updateToggles();
+function positionOfPointer(ev){const rect=canvas.getBoundingClientRect();return {x:(ev.clientX-rect.left)/scale+camX,y:(ev.clientY-rect.top)/scale+camY};}
+function aim(ev){const a=positionOfPointer(ev);let angle=Math.atan2(a.y-p.y,a.x-p.x);if(Number.isFinite(angle)){p.target=angle;const dx=a.x-p.x,dy=a.y-p.y;p.targetLength=clamp(Math.hypot(dx,dy)*.62,79,138);} }
+canvas.addEventListener('pointerdown',ev=>{if(phase!=='playing')return;pointer=ev.pointerId;canvas.setPointerCapture(ev.pointerId);aim(ev);$('hint').style.opacity='.25';});
+canvas.addEventListener('pointermove',ev=>{if(phase!=='playing')return;if(ev.pointerType==='mouse'||pointer===ev.pointerId)aim(ev)});
+for(const typ of ['pointerup','pointercancel'])canvas.addEventListener(typ,ev=>{if(pointer===ev.pointerId){pointer=null;$('hint').style.opacity='1'}});
+window.addEventListener('keydown',ev=>{if(ev.key==='Escape'||ev.key==='p')phase==='playing'?pause():phase==='paused'?start():null;if(ev.key.toLowerCase()==='r')reset();if(phase==='playing'){if(ev.key==='ArrowLeft'||ev.key.toLowerCase()==='a')p.target-=.36;if(ev.key==='ArrowRight'||ev.key.toLowerCase()==='d')p.target+=.36;if(ev.key==='ArrowUp')p.targetLength=132;if(ev.key==='ArrowDown')p.targetLength=82;}});
+function hitCircleBox(cx,cy,r,b){let qx=clamp(cx,b.x,b.x+b.w),qy=clamp(cy,b.y,b.y+b.h);let dx=cx-qx,dy=cy-qy,d2=dx*dx+dy*dy;if(d2>=r*r)return null;let d=Math.sqrt(d2),nx=0,ny=0,pen=0;if(d>0.0001){nx=dx/d;ny=dy/d;pen=r-d}else{const dleft=Math.abs(cx-b.x),dright=Math.abs(b.x+b.w-cx),dtop=Math.abs(cy-b.y),dbot=Math.abs(b.y+b.h-cy);const v=Math.min(dleft,dright,dtop,dbot);if(v===dleft){nx=-1;pen=r+dleft}else if(v===dright){nx=1;pen=r+dright}else if(v===dtop){ny=-1;pen=r+dtop}else{ny=1;pen=r+dbot}}return {nx,ny,pen}}
+function physicsStep(dt){total+=dt;p.contact=false;
+ let delta=Math.atan2(Math.sin(p.target-p.angle),Math.cos(p.target-p.angle));p.angular=clamp(delta*16*sens/100,-10*sens/100,10*sens/100);p.angle+=p.angular*dt;p.length=lerp(p.length,p.targetLength||97,Math.min(1,dt*7));
+ p.vy+=physics.gravity*dt;p.vx*=.999;const maxV=900;p.vx=clamp(p.vx,-maxV,maxV);p.vy=clamp(p.vy,-maxV,maxV);p.x+=p.vx*dt;p.y+=p.vy*dt;
+ // The rigid hammer drives the character away from objects it presses against.
+ for(let j=0;j<3;j++){
+  let tx=p.x+Math.cos(p.angle)*p.length,ty=p.y+Math.sin(p.angle)*p.length;
+  for(const b of solids){if(tx+14<b.x||tx-14>b.x+b.w||ty+14<b.y||ty-14>b.y+b.h)continue;let hit=hitCircleBox(tx,ty,12,b);if(!hit)continue;
+    p.contact=true;tipContact=.18;
+    const {nx,ny,pen}=hit;
+    p.x+=nx*pen*.83;p.y+=ny*pen*.83;
+    let vtx=p.vx-Math.sin(p.angle)*p.length*p.angular,vty=p.vy+Math.cos(p.angle)*p.length*p.angular;
+    let inward=Math.max(0,-(vtx*nx+vty*ny));
+    if(inward>0){let impulse=Math.min(460,inward*.65);p.vx+=nx*impulse;p.vy+=ny*impulse;if(inward>115&&j===0)playThud(inward)}
+  }
+  for(const b of solids){if(p.x+p.r<b.x||p.x-p.r>b.x+b.w||p.y+p.r<b.y||p.y-p.r>b.y+b.h)continue;const hit=hitCircleBox(p.x,p.y,p.r,b);if(!hit)continue;let {nx,ny,pen}=hit;p.x+=nx*pen;p.y+=ny*pen;const vn=p.vx*nx+p.vy*ny;if(vn<0){p.vx-=(1+physics.elasticity)*vn*nx;p.vy-=(1+physics.elasticity)*vn*ny;if(ny<-.3)p.vx*=.982;}}
+ }
+ tipContact=Math.max(0,tipContact-dt);
+ if(p.y>1050){p.y=Math.min(p.y,1078)}
+ let height=Math.max(0,(1078-p.y)/31);wasAbove=Math.max(wasAbove,height);if(height>best+.05){best=height;safeWrite('higherfools-best',best.toFixed(2))}
+ if(p.y<-455&&!win){win=true;phase='finished';$('overlay').style.display='flex';$('eyebrow').textContent='VOCÊ CONSEGUIU?!';$('subtitle').textContent='Parabéns. Agora tente fazer sem cair.';$('heroChooser').style.display='grid';$('settings').style.display='none';$('play').textContent='↺ JOGAR DE NOVO';showToast('REI DA SUCATA!')}
+ $('height').textContent=height.toFixed(1).replace('.',',')+' m';$('best').textContent=best.toFixed(1).replace('.',',')+' m';
+ }
+let audioCtx=null,lastThud=0;function playThud(strength){if(muted||total-lastThud<.17)return;lastThud=total;try{const Audio=window.AudioContext||window.webkitAudioContext;if(!Audio)return;audioCtx??=new Audio();const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type='triangle';o.frequency.setValueAtTime(Math.min(180,80+strength*.1),audioCtx.currentTime);o.frequency.exponentialRampToValueAtTime(43,audioCtx.currentTime+.13);g.gain.setValueAtTime(.06,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+.14);o.connect(g).connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+.145)}catch{}}
+function rect(x,y,w,h,col){ctx.fillStyle=col;ctx.fillRect(x,y,w,h)}
+function poly(pts,color){ctx.fillStyle=color;ctx.beginPath();ctx.moveTo(pts[0][0],pts[0][1]);for(let i=1;i<pts.length;i++)ctx.lineTo(pts[i][0],pts[i][1]);ctx.closePath();ctx.fill()}
+function outlineText(t,x,y,font,color,stroke='#273644',sw=3){ctx.font=font;ctx.textAlign='center';ctx.lineJoin='round';ctx.lineWidth=sw;ctx.strokeStyle=stroke;ctx.strokeText(t,x,y);ctx.fillStyle=color;ctx.fillText(t,x,y)}
+function drawBackground(){let gradient=ctx.createLinearGradient(0,0,0,H);gradient.addColorStop(0,'#4a98dd');gradient.addColorStop(.60,'#a9d7f0');gradient.addColorStop(1,'#fbd7a0');rect(0,0,W,H,gradient);const sunY=110-(camY-400)*.02;ctx.beginPath();ctx.arc(W*.81,sunY,43,0,TAU);ctx.fillStyle='#ffdf8b';ctx.fill();
+ for(let i=0;i<11;i++){let xx=(i*163+57)%(W+110)-50,yy=((i*197+camY*.08)%(H+200)+H+200)%(H+200)-70;ctx.fillStyle='#ffffff90';ctx.beginPath();ctx.ellipse(xx,yy,55+(i%3)*15,14+(i%2)*6,0,0,TAU);ctx.fill();}
+ // distant city and construction silhouettes use parallax; no false physics colliders.
+ let base=H*.85+(1100-camY-vh*.63)*scale*.12;
+ for(let i=0;i<15;i++){let bw=25+(i*37)%80,bh=120+(i*61)%270,bx=i*90-30;rect(bx,base-bh,bw,bh,'#638ba1a0');for(let j=0;j<7;j++){rect(bx+6+(j%2)*11,base-bh+17+j*29,4,9,'#f6dca56b')}}
+ ctx.strokeStyle='#b3a58b90';ctx.lineWidth=6;for(let i=0;i<4;i++){let x=i*150+36;ctx.beginPath();ctx.moveTo(x,base);ctx.lineTo(x,base-350);ctx.lineTo(x+67,base-350);ctx.stroke()}
+}
+function drawCloud(x,y){ctx.fillStyle='#eaf4ed';for(let a=0;a<4;a++){ctx.beginPath();ctx.ellipse(x+a*26-30,y+(a%2)*-7,36,18,0,0,TAU);ctx.fill()}}
+function drawBox3d(x,y,w,h,kind,seed=0){let face='#bc8654',top='#e7af6b',side='#805634';switch(kind){case'metal':face='#8799a4';top='#b4c1c0';side='#667b88';break;case'fridge':face='#e6dbb8';top='#fff2d4';side='#b6a98c';break;case'barrel':face='#ba5c42';top='#e68c58';side='#79473b';break;case'finish':face='#d4b664';top='#ffe98b';side='#aa6b41';break;case'floor':face='#8d7b62';top='#c3a278';side='#665a50';break;case'wall':face='#896e63';top='#b6a087';side='#655251';break;case'wood':default:break}
+ let dep=(kind==='floor'?15:12);rect(x,y,w,h,face);poly([[x,y],[x+dep,y-dep*.58],[x+w+dep,y-dep*.58],[x+w,y]],top);poly([[x+w,y],[x+w+dep,y-dep*.58],[x+w+dep,y+h-dep*.58],[x+w,y+h]],side);ctx.strokeStyle='#473d36';ctx.lineWidth=2;ctx.strokeRect(x,y,w,h);if(kind==='wood'||kind==='floor'){ctx.strokeStyle='#855a36';ctx.lineWidth=2;for(let n=1;n<4;n++){ctx.beginPath();ctx.moveTo(x+w*n/4,y+2);ctx.lineTo(x+w*n/4,y+h-1);ctx.stroke()}}if(kind==='metal'||kind==='fridge'){ctx.fillStyle='#444d4c';for(let k=0;k<3;k++)ctx.fillRect(x+12+k*(w-22)/3,y+6,4,4)}if(kind==='fridge'){rect(x+w*.47,y+4,5,h-8,'#9c9784');rect(x+w*.48,y+4,3,h-8,'#fff7d5')}
+if(kind==='barrel'){for(let k=0;k<4;k++)rect(x+k*w/4,y,w/13,h,'#d16d4c')}
+if(kind==='finish'){rect(x+10,y-8,w-20,11,'#fff2a8');outlineText('🏁 O TOPO!',x+w*.5,y-14,'bold 14px system-ui','#fff8cb')}
+}
+function drawScenery(){// Background supports, bolts, salvage props are all intentionally crude.
+ for(const b of solids){if(b.y+b.h<camY-90||b.y>camY+vh+90)continue;
+ if(b.type!=='floor'&&b.type!=='wall'&&b.type!=='finish'){
+ ctx.strokeStyle='#886a51';ctx.lineWidth=8;ctx.beginPath();ctx.moveTo(b.x+19,b.y+b.h);ctx.lineTo(b.x+30,b.y+Math.max(b.h+75,105));ctx.moveTo(b.x+b.w-25,b.y+b.h);ctx.lineTo(b.x+b.w-38,b.y+Math.max(b.h+75,105));ctx.stroke();
+ }
+ drawBox3d(b.x,b.y,b.w,b.h,b.type);
+ }
+ // Scattered decoration that does not affect collisions.
+ for(let i=0;i<decorations.length;i++){let d=decorations[i];if(d.y<camY-80||d.y>camY+vh+80)continue;if(i%3===0){ctx.strokeStyle='#6e655c';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(d.x,d.y-60);ctx.lineTo(d.x+10,d.y+15);ctx.stroke()}if(i%6===0){ctx.fillStyle='#db6b43';ctx.beginPath();ctx.moveTo(d.x,d.y);ctx.lineTo(d.x+d.size,d.y);ctx.lineTo(d.x+d.size*.78,d.y-d.size*.9);ctx.lineTo(d.x+d.size*.19,d.y-d.size*.9);ctx.fill();rect(d.x+3,d.y-d.size*.42,d.size-3,5,'#eeeac0')}else if(i%6===2){ctx.strokeStyle='#263b42';ctx.lineWidth=6;ctx.beginPath();ctx.arc(d.x,d.y,d.size*.42,0,TAU);ctx.stroke();ctx.fillStyle='#ddd3a5';ctx.beginPath();ctx.arc(d.x,d.y,d.size*.1,0,TAU);ctx.fill()}else if(i%6===4){rect(d.x,d.y-d.size,d.size,d.size,'#6a925f');rect(d.x+4,d.y-d.size+4,5,5,'#d8d2a9');}}
+ // Trash sign and flag at the summit.
+ ctx.strokeStyle='#52555a';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(339,-433);ctx.lineTo(339,-495);ctx.stroke();poly([[339,-495],[402,-482],[339,-470]],'#f9cc38');outlineText('?',371,-480,'bold 18px system-ui','#473730');
+}
+function drawHero(){let bob=Math.sin(total*6)*Math.min(Math.abs(p.vy)/190,1)*2;ctx.save();ctx.translate(p.x,p.y+bob);let vyTilt=clamp(p.vx*.00065,-.23,.23);ctx.rotate(vyTilt);
+ // dangling short legs: cardboard box body, goofy impossible limbs.
+ ctx.strokeStyle='#5e3f34';ctx.lineCap='round';ctx.lineWidth=9;ctx.beginPath();ctx.moveTo(-10,7);ctx.lineTo(-17,31+Math.sin(total*12)*3);ctx.moveTo(11,6);ctx.lineTo(19,30-Math.sin(total*12)*3);ctx.stroke();
+ poly([[-23,25],[-9,25],[-8,34],[-25,35]],'#283e51');poly([[11,23],[27,22],[28,34],[12,35]],'#283e51');
+ poly([[-22,-24],[20,-26],[24,12],[-20,16]],'#d95536');rect(-19,-21,36,7,'#ed7950');
+ // arms follow the hammer.
+ ctx.lineWidth=11;ctx.strokeStyle='#e7b177';ctx.beginPath();ctx.moveTo(-12,-16);ctx.lineTo(-28,-8);ctx.moveTo(13,-17);ctx.lineTo(Math.cos(p.angle)*30,Math.sin(p.angle)*30);ctx.stroke();
+ // box head drawn as layered low-poly cardboard cube.
+ poly([[-23,-65],[20,-68],[26,-28],[-22,-25]],'#be9867');poly([[20,-68],[30,-60],[33,-32],[26,-28]],'#7f603f');poly([[-23,-65],[-13,-77],[27,-75],[20,-68]],'#e0bb7f');
+ ctx.strokeStyle='#573d30';ctx.lineWidth=2;ctx.strokeRect(-22,-65,43,39);
+ // cross-eyed face and panicky mouth
+ ctx.fillStyle='#fff9eb';ctx.beginPath();ctx.ellipse(-10,-49,6,8,0,0,TAU);ctx.ellipse(10,-49,6,8,0,0,TAU);ctx.fill();ctx.fillStyle='#272b31';ctx.beginPath();ctx.arc(-8,-46,2.5,0,TAU);ctx.arc(8,-47,2.5,0,TAU);ctx.fill();ctx.strokeStyle='#392820';ctx.lineWidth=2.6;ctx.beginPath();ctx.moveTo(-12,-33);ctx.quadraticCurveTo(1,-24,12,-34);ctx.stroke();
+ // scarf trail
+ poly([[-21,-25],[-29,-28],[-38-Math.sin(total*8)*7,-9],[-23,-16]],'#f0a236');
+ ctx.restore();
+ // hammer is mechanically aligned with actual physics collision head.
+ const x0=p.x,y0=p.y,tx=x0+Math.cos(p.angle)*p.length,ty=y0+Math.sin(p.angle)*p.length;
+ ctx.strokeStyle='#453731';ctx.lineWidth=13;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(x0,y0);ctx.lineTo(tx,ty);ctx.stroke();ctx.strokeStyle='#a77347';ctx.lineWidth=8;ctx.beginPath();ctx.moveTo(x0,y0);ctx.lineTo(tx,ty);ctx.stroke();
+ ctx.save();ctx.translate(tx,ty);ctx.rotate(p.angle);ctx.fillStyle='#454b51';ctx.fillRect(-10,-23,22,46);ctx.fillStyle='#9a9c9a';ctx.fillRect(-7,-23,21,46);ctx.fillStyle='#676767';ctx.fillRect(-10,-23,5,46);rect(-7,-20,17,4,'#d0cac0');rect(-7,16,17,4,'#494f51');ctx.restore();
+ if(tipContact>0){ctx.strokeStyle='#fff19e';ctx.lineWidth=2.8;ctx.beginPath();ctx.arc(tx,ty,13+tipContact*20,0,TAU);ctx.stroke()}
+}
+function draw(){ctx.setTransform(DPR,0,0,DPR,0,0);drawBackground();ctx.save();ctx.translate(-camX*scale,-camY*scale);ctx.scale(scale,scale);drawScenery();drawHero();ctx.restore();
+ if(phase==='playing'&&p.contact){ctx.fillStyle='#ffffff55';ctx.strokeStyle='#27405185';let x=W/2,y=H*.78;ctx.beginPath();ctx.arc(x,y,20,0,TAU);ctx.stroke()}
+ if(phase==='playing'&&p.y<-340){outlineText('FALTA POUCO!',W*.5,H*.20,'900 22px system-ui','#fff4ac')}
+}
+function frame(now){let dt=Math.min(.04,(now-last)/1000||0);last=now;if(phase==='playing'){accumulator=Math.min(accumulator+dt,.08);let it=0;while(accumulator>=1/120&&it<12){physicsStep(1/120);accumulator-=1/120;it++;}}
+ let targetCam=p.y-vh*.61;camY=lerp(camY,targetCam,Math.min(1,dt*4.7));camX=lerp(camX,vw>=560?clamp(p.x-vw*.5,560-vw,0):clamp(p.x-vw*.5,0,560-vw),Math.min(1,dt*2));
+ if(toasterTimeout>0){toasterTimeout-=dt;if(toasterTimeout<=0)$('toast').style.opacity=0}
+ draw();requestAnimationFrame(frame)}
+ reset();menu();requestAnimationFrame(frame);
+ window.__higherFools={getState:()=>({phase,x:p.x,y:p.y,vx:p.vx,vy:p.vy,angle:p.angle,contact:p.contact,height:Math.max(0,(1078-p.y)/31),best,solids:solids.length,canvasWidth:canvas.width,canvasHeight:canvas.height}),start,reset,aimAngle:a=>p.target=a,step:(dt=.016)=>physicsStep(dt),settings:()=>({sens,showHints,muted})};
+})();
+</script>
+</body>
+</html>
