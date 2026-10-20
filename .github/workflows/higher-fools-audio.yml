@@ -1,0 +1,30 @@
+name: Higher Fools - arquivar musica gerada
+on:
+  push:
+    branches: [higher-fools-prototipo]
+    paths: ['.github/workflows/higher-fools-audio.yml']
+permissions:
+  contents: write
+jobs:
+  save-original-music:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: higher-fools-prototipo
+      - name: Download da prévia musical existente do Runway
+        env:
+          AUDIO_URL: 'https://dnznrvs05pmza.cloudfront.net/lyria3-clip/ab354b83-18a7-4395-b9ee-9af7c0e63eb3/Higher_Fools___A_Sinfonia_da_Desgra_a__pr_via_01_.mp3?_jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXlIYXNoIjoiYWVhY2VjMGIxNDRlMTAzYiIsImJ1Y2tldCI6InJ1bndheS10YXNrLWFydGlmYWN0cyIsInN0YWdlIjoicHJvZCIsImV4cCI6MTc5MjU5MzgwM30.7BDsOBlHnKsj-IMvFhL5SZX56E-cpyt_MqZz6jrw4bY'
+        run: |
+          mkdir -p HigherFools/v0.3.1/audio
+          curl --fail --location --silent --show-error --retry 3 --max-time 90 -o HigherFools/v0.3.1/audio/sinfonia_da_desgraca_preview.mp3 "$AUDIO_URL"
+          test $(wc -c < HigherFools/v0.3.1/audio/sinfonia_da_desgraca_preview.mp3) -gt 100000
+          file HigherFools/v0.3.1/audio/sinfonia_da_desgraca_preview.mp3 | grep -iE 'mpeg|audio'
+      - name: Arquivar áudio no branch experimental
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add HigherFools/v0.3.1/audio/sinfonia_da_desgraca_preview.mp3
+          git commit -m "Higher Fools: arquivar prévia MP3 original para loop offline"
+          git push origin HEAD:higher-fools-prototipo
