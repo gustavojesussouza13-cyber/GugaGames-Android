@@ -1,0 +1,64 @@
+name: Higher Fools Android APK - v0.3.1 experimental
+
+on:
+  push:
+    branches: [higher-fools-prototipo]
+    paths: ['.github/workflows/higher-fools-android.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-higher-fools-apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Preparar Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Preparar Gradle 8.9
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+      - name: Preparar Android SDK
+        uses: android-actions/setup-android@v3
+      - name: Instalar SDK e ferramentas
+        run: |
+          yes | sdkmanager --licenses > /dev/null || true
+          sdkmanager "platforms;android-35" "build-tools;35.0.0"
+      - name: Incluir jogo offline e MP3 original (sem nova geração)
+        shell: bash
+        run: |
+          set -euxo pipefail
+          test -s HigherFools/v0.3.1/index.html
+          test -s HigherFools/v0.3.1/game.js
+          test -s HigherFools/v0.3.1/style.css
+          test -s HigherFools/v0.3.1/audio/sinfonia_da_desgraca_preview.mp3
+          node --check HigherFools/v0.3.1/game.js
+          grep -q 'loop src="audio/sinfonia_da_desgraca_preview.mp3"' HigherFools/v0.3.1/index.html
+          mkdir -p HigherFools/android/app/src/main/assets/audio
+          cp HigherFools/v0.3.1/index.html HigherFools/v0.3.1/style.css HigherFools/v0.3.1/game.js HigherFools/android/app/src/main/assets/
+          cp HigherFools/v0.3.1/audio/sinfonia_da_desgraca_preview.mp3 HigherFools/android/app/src/main/assets/audio/
+      - name: Compilar e assinar APK debug
+        working-directory: HigherFools/android
+        run: gradle --no-daemon --stacktrace :app:assembleDebug
+      - name: Conferir APK e conteúdo offline
+        run: |
+          set -euxo pipefail
+          APK=HigherFools/android/app/build/outputs/apk/debug/app-debug.apk
+          test -s "$APK"
+          unzip -l "$APK" | grep 'assets/index.html'
+          unzip -l "$APK" | grep 'assets/game.js'
+          unzip -l "$APK" | grep 'assets/audio/sinfonia_da_desgraca_preview.mp3'
+          ls -lh "$APK"
+      - name: Salvar arquivo APK para download
+        uses: actions/upload-artifact@v4
+        with:
+          name: Higher-Fools-v0.3.1-Android-APK-Experimental
+          path: HigherFools/android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 90
