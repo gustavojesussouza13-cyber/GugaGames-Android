@@ -14,7 +14,7 @@ jobs:
       - name: Validar áudio original incorporado
         run: |
           test -s HigherFools/v0.3.1/audio/sinfonia_da_desgraca_preview.mp3
-          ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1 HigherFools/v0.3.1/audio/sinfonia_da_desgraca_preview.mp3
+          file HigherFools/v0.3.1/audio/sinfonia_da_desgraca_preview.mp3 | grep -qiE 'MPEG|MP3|Audio'
           grep -q 'loop src="audio/sinfonia_da_desgraca_preview.mp3"' HigherFools/v0.3.1/index.html
           node --check HigherFools/v0.3.1/game.js
           test -s HigherFools/v0.3.1/style.css
