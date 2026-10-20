@@ -24,12 +24,13 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.9'
-      - name: Preparar Android SDK
-        uses: android-actions/setup-android@v3
-      - name: Instalar SDK e ferramentas
+      - name: Verificar Android SDK já instalado no runner
         run: |
-          yes | sdkmanager --licenses > /dev/null || true
-          sdkmanager "platforms;android-35" "build-tools;35.0.0"
+          echo "ANDROID_HOME=$ANDROID_HOME"
+          ls -d "$ANDROID_HOME"/platforms/android-* || true
+          if [ ! -d "$ANDROID_HOME/platforms/android-35" ]; then
+            "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-35" "build-tools;35.0.0"
+          fi
       - name: Incluir jogo offline e MP3 original (sem nova geração)
         shell: bash
         run: |
