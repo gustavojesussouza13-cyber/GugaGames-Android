@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no,maximum-scale=1">
+<meta name="theme-color" content="#589bdf"><title>Higher Fools • Prévia 3D v0.3.1</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="sky"></div><canvas id="world" aria-label="Cenário 3D jogável Higher Fools"></canvas>
+<div id="hud" hidden><div class="hud-top"><div><div class="small-logo">HIGHER <b>FOOLS</b><span> 3D</span></div><div class="counters"><div class="counter">ALTURA <b id="height">0,0 m</b></div><div class="counter">RECORDE <b id="best">0,0 m</b></div></div></div><div class="actions"><button id="pause" title="Pausar">Ⅱ</button><button id="restart" title="Reiniciar">↺</button></div></div><div id="touchhint">ARRASTE PARA APONTAR O MARTELO. APOIE-O E EMPURRE!</div><div id="contact" aria-live="polite"></div></div>
+<section id="menu"><div class="menu-card"><div class="ribbon">PRÉVIA INTERNA · v0.3.1 WEBGL</div><div class="logo">HIGHER<br><span>FOOLS</span><i>♛</i></div><div class="slogan">Suba o mais alto...<br>se conseguir!</div><div class="heroes"><div class="hero chosen"><div class="avatar avatar-brix"><i></i><em></em></div><b>BRIX</b><small>Martelo maluco</small></div><div class="hero"><div class="avatar avatar-nix"><i></i></div><b>NIX</b><small>Em breve</small></div><div class="hero"><div class="avatar avatar-grok"><i></i></div><b>GROK</b><small>Em breve</small></div><div class="hero"><div class="avatar avatar-sora"><i></i></div><b>SORA</b><small>Em breve</small></div></div><button id="play" class="play">COMEÇAR A SUBIR <span>➜</span></button><p class="sub">Escalada difícil • Física desajeitada • Sem checkpoints</p><div class="settings"><label>Sensibilidade <input id="sensitivity" type="range" min="50" max="160" value="100"></label><label>Qualidade <select id="quality"><option value="high">Normal</option><option value="low">Econômica</option></select></label></div></div><div class="note">Protótipo 3D real: física da escalada ainda em um plano lateral.<br>Somente teste interno · não é publicação oficial.</div></section>
+<div id="fatal" hidden>O WebGL não está disponível neste navegador. Experimente Chrome ou Firefox atualizado.</div>
+<audio id="higher-fools-theme" preload="auto" loop src="audio/sinfonia_da_desgraca_preview.mp3" aria-hidden="true"></audio>
+<script src="game.js" defer></script>
+</body></html>
